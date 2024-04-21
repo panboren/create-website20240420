@@ -47,7 +47,9 @@
     "@pinia/nuxt": "^0.5.1",
     "@vueuse/core": "^10.7.0",
     "@vueuse/nuxt": "^10.7.0",
+    "gsap": "^3.12.5",
     "normalize.css": "^8.0.1",
-    "pinia": "^2.1.7"
+    "pinia": "^2.1.7",
+    "vue-draggable-resizable": "^3.0.0"
   }
 }
