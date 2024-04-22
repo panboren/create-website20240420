@@ -6,6 +6,7 @@
 -->
 <template>
   <el-dialog
+    :lock-scroll="false"
     :modal="false"
     :append-to-body="true"
     :draggable="true"
@@ -16,7 +17,7 @@
     @close="onclose"
   >
     <el-form ref="form" :model="formData" label-width="80px" :inline="true">
-      <el-form-item label="选择类型">
+      <el-form-item label="选择类型" style="width: 100%;">
         <el-select v-model="formData.type" placeholder="请选择类型">
           <el-option
             v-for="item in typeOption"
@@ -27,16 +28,19 @@
         </el-select>
       </el-form-item>
       <el-form-item label="宽">
-        <el-input-number v-model="formData.width" :min="1" />
+        <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
       </el-form-item>
       <el-form-item label="高">
-        <el-input-number v-model="formData.height" :min="1" />
+               <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+
       </el-form-item>
       <el-form-item label="圆角">
-        <el-input-number v-model="formData.height" :min="1" />
+               <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+
       </el-form-item>
       <el-form-item label="阴影">
-        <el-input-number v-model="formData.height" :min="1" />
+               <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+
       </el-form-item>
       <el-form-item label="阴影颜色">
         <el-color-picker v-model="formData.height" show-alpha />
@@ -48,15 +52,16 @@
         <el-input v-model="formData.content" />
       </el-form-item>
       <el-form-item label="文字尺寸" v-if="formData.type === 'text'">
-        <el-input-number v-model="formData.height" :min="1" />
+               <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+
       </el-form-item>
       <el-form-item label="文字加粗" v-if="formData.type === 'text'">
-        <el-input-number v-model="formData.height" :min="1" />
+               <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+
       </el-form-item>
       <el-form-item label="文字颜色" v-if="formData.type === 'text'">
         <el-color-picker v-model="formData.height" />
       </el-form-item>
-
       <el-form-item label="添加图片" v-if="formData.type === 'img'" style="width: 100%">
         <div class="form-img-main" v-show="formData.imgUrl">
           <img :src="formData.imgUrl" class="form-img" />
@@ -79,10 +84,55 @@
       <el-form-item label="添加动画" style="width: 100%">
         <el-button type="primary" :icon="Plus" />
       </el-form-item>
-      <el-form-item label="过度时间">
-        <el-input-number v-model="formData.height" :min="1" />
-      </el-form-item>
-      <el-form-item label="选择类型">
+<!--      <el-form-item label="">
+        <el-timeline style="max-width: 600px">
+          <el-timeline-item timestamp="" placement="top">
+            <el-card>
+              <el-form-item label="过度时间">
+                       <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+              </el-form-item>
+              <el-form-item label="动画类型">
+                <el-select v-model="formData.type" placeholder="请选择动画类型">
+                  <el-option
+                      v-for="item in amimationOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="移动X">
+                      <span style="margin: 0 5px;"> 开始</span>
+                       <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+                       <span style="margin: 0 5px;">结束</span>
+                       <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+              </el-form-item>
+
+
+            </el-card>
+          </el-timeline-item>
+          <el-timeline-item timestamp="2018/4/3" placement="top">
+            <el-card>
+              <h4>Update Github template</h4>
+              <p>Tom committed 2018/4/3 20:46</p>
+            </el-card>
+          </el-timeline-item>
+          <el-timeline-item timestamp="2018/4/2" placement="top">
+            <el-card>
+              <h4>Update Github template</h4>
+              <p>Tom committed 2018/4/2 20:46</p>
+            </el-card>
+          </el-timeline-item>
+        </el-timeline>
+      </el-form-item>-->
+
+
+
+
+
+
+
+<!--      <el-form-item label="选择类型">
         <el-select v-model="formData.type" placeholder="请选择类型">
           <el-option
             v-for="item in typeOption"
@@ -91,17 +141,20 @@
             :value="item.value"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
 
       <!--      <el-form-item label="延迟时间">
-        <el-input-number v-model="formData.height" :min="1" />
+               <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+
       </el-form-item>
       <el-form-item label="重复次数">
-        <el-input-number v-model="formData.height" :min="1" />
+               <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+
       </el-form-item>
 
       <el-form-item label="动画方向">
-        <el-input-number v-model="formData.height" :min="1" />
+               <el-input clearable placeholder="请输入" style="width: 80px" v-model="formData.width" :min="1" />
+
       </el-form-item>-->
 
       <!--      <el-form-item label="选择类型">
@@ -167,6 +220,63 @@ let typeOption = ref([
   // }
 ])
 
+let amimationOptions = ref([
+  {
+    value:'x',
+    label:'移动X'
+  },
+  {
+    value:'y',
+    label:'移动Y'
+  },
+  {
+    value:'scaleX',
+    label:'缩放X'
+  },
+  {
+    value:'scaleY',
+    label:'缩放Y'
+  },
+  {
+    value:'rotation',
+    label:'旋转'
+  },
+  {
+    value:'skewX',
+    label:'倾斜X'
+  },
+  {
+    value:'skewY',
+    label:'倾斜Y'
+  },
+  {
+    value:'opacity',
+    label:'透明度'
+  },
+  {
+    value:'rotation',
+    label:'旋转'
+  },
+  {
+    value:'repeat',
+    label:'重复'
+  },
+  {
+    value:'delay',
+    label:'延迟'
+  },
+  {
+    value:'yoyo',
+    label:'方向'
+  },
+  {
+    value:'ease',
+    label:'曲线'
+  }
+])
+
+
+
 const handleExceed = () => {
   upload.value!.clearFiles()
 }
@@ -213,6 +323,10 @@ const saveData = () => {
     position: absolute;
     right: 5px;
     top: 5px;
+  }
+  .item-label{
+    margin: 0 5px;
+    font-size: 12px;
   }
 }
 </style>

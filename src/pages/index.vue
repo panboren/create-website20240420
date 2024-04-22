@@ -92,8 +92,6 @@ const add = ($event) => {
       x: 300,
       rotation: 360,
       duration: 3
-      // left: $event.offsetX,
-      // top: $event.offsetY
       // scaleX: 1,
       // scaleY: 1,
       // rotation: 90,
