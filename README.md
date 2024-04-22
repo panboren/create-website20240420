@@ -1,3 +1,41 @@
+# pm2 启动  安装pm2
+```bash
+ npm i pm2 -g
+ 
+ ```
+
+# 1 把 .output 和 .nuxt文 和 ecosystem.config.js 文件放到一起
+
+# 文件ecosystem.config.js
+# 文件内容
+```bash
+module.exports = {
+apps:[
+    {
+    name: '欣锋数智',
+    exec_mode: 'cluster',
+    instances: 'max',
+    script: './.output/server/index.mjs'
+    }
+   ]
+}
+```
+# 启动命令
+```bash
+
+pm2 start ecosystem.config.js
+
+```
+
+# 生产运行命令
+```bash
+pm2 start ecosystem.config.js  --env production
+
+```
+
+
+
+
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
