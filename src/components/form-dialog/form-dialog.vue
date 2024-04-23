@@ -74,7 +74,7 @@
             :min="1"
           />
         </el-form-item>
-        <el-form-item label="阴影" label-width="60px">
+        <el-form-item label="阴影宽" label-width="60px">
           <el-input
             clearable
             placeholder="请输入"
@@ -124,7 +124,7 @@
           <el-form-item label="添加图片" style="width: 100%">
             <div class="form-img-main" v-show="formData.formData.imgUrl">
               <img :src="formData.formData.imgUrl" class="form-img" />
-              <el-icon @click.stop="remove" class="form-img-close">
+              <el-icon @click.stop="removeImg" class="form-img-close">
                 <Close />
               </el-icon>
             </div>
@@ -148,53 +148,95 @@
         <el-form-item label="添加动画" style="width: 100%">
           <el-button type="primary" :icon="Plus" @click="addAmimation" />
         </el-form-item>
-        <el-scrollbar height="210px">
-          <el-timeline>
-            <el-timeline-item timestamp="" placement="top">
+        <el-scrollbar height="230px">
+          <el-timeline style="padding-left: 20px">
+            <el-timeline-item
+              v-for="(item, index) in formData.amimation"
+              :key="item.id + '_' + index"
+              timestamp=""
+              placement="top"
+            >
               <div class="timeline-item-main">
+                <el-form-item
+                  label="过度时间"
+                  label-width="80px"
+                  style="margin-right: 0; margin-bottom: 5px; width: 100%"
+                >
+                  <el-input
+                    clearable
+                    placeholder="请输入"
+                    v-model="formData.formData.width"
+                    :min="1"
+                    style="width: 120px"
+                  />
+                </el-form-item>
                 <el-form-item
                   label="动画类型"
                   label-width="80px"
-                  style="margin-right: 0; margin-bottom: 5px"
+                  style="margin-right: 0; margin-bottom: 5px; width: 100%"
                 >
-                  <el-select v-model="formData.formData.type" placeholder="请选择动画类型">
+                  <el-select
+                    v-model="item.keys"
+                    placeholder="请选择动画类型"
+                    style="width: 160px"
+                    :teleported="false"
+                    multiple
+                    clearable
+                    collapse-tags
+                    :max-collapse-tags="1"
+                  >
                     <el-option
-                      v-for="item in amimationOptions"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
+                      v-for="anItem in easeOptions"
+                      :key="anItem.value"
+                      :label="anItem.label"
+                      :value="anItem.value"
                     />
                   </el-select>
                 </el-form-item>
                 <el-form-item
-                  label="过度时间"
+                  label="动画属性"
                   label-width="80px"
-                  style="margin-right: 0; margin-bottom: 5px"
+                  style="margin-right: 0; margin-bottom: 5px; width: 100%"
                 >
-                  <el-input
+                  <el-select
+                    v-model="item.ease"
+                    placeholder="请选择动画属性"
+                    style="width: 160px"
+                    :teleported="false"
+                    multiple
                     clearable
-                    placeholder="请输入"
-                    v-model="formData.formData.width"
-                    :min="1"
-                    style="width: 100px"
-                  />
-                  <el-icon @click.stop="remove" class="timeline-item-main-key-close">
-                    <Close />
-                  </el-icon>
+                    collapse-tags
+                    :max-collapse-tags="1"
+                  >
+                    <el-option
+                      v-for="anItem in amimationData"
+                      :key="anItem.value"
+                      :label="anItem.label"
+                      :value="anItem.value"
+                    />
+                  </el-select>
                 </el-form-item>
                 <el-form-item
-                  label="移动x"
+                  v-for="anItem in amimationData"
+                  :label="anItem.label"
+                  :key="anItem.value"
                   label-width="80px"
                   style="margin-right: 0; margin-bottom: 5px"
                 >
+                  <el-color-picker
+                    v-if="anItem.type === 'color'"
+                    v-model="item[anItem.value]"
+                    show-alpha
+                  />
                   <el-input
+                    v-else
                     clearable
                     placeholder="请输入"
-                    v-model="formData.formData.width"
+                    v-model="item[anItem.value]"
                     :min="1"
-                    style="width: 100px"
+                    style="width: 120px"
                   />
-                  <el-icon @click.stop="remove" class="timeline-item-main-key-close">
+                  <el-icon @click.stop="removeImg" class="timeline-item-main-key-close">
                     <Close />
                   </el-icon>
                 </el-form-item>
@@ -213,6 +255,7 @@
   </el-dialog>
 </template>
 <script setup lang="ts">
+import { typeOption, amimationOptions, easeOptions } from '~/components/form-dialog/config'
 import { Plus, Close } from '@element-plus/icons-vue'
 const props = defineProps({
   visibel: {
@@ -230,101 +273,27 @@ const props = defineProps({
 let emit = defineEmits(['update:visibel', 'update:data'])
 
 const upload = ref(null)
-
 let formData = ref(props.data)
-let typeOption = ref([
-  {
-    value: 'img',
-    label: '图片'
-  },
-  {
-    value: 'text',
-    label: '文本'
-  },
-  {
-    value: 'div',
-    label: '空框'
-  }
-  // {
-  //   value: 'audio',
-  //   label: '音频'
-  // },
-  // {
-  //   value: 'video',
-  //   label: '视频'
-  // }
-])
-
-let amimationOptions = ref([
-  {
-    value: 'x',
-    label: '移动X'
-  },
-  {
-    value: 'y',
-    label: '移动Y'
-  },
-  {
-    value: 'scaleX',
-    label: '缩放X'
-  },
-  {
-    value: 'scaleY',
-    label: '缩放Y'
-  },
-  {
-    value: 'rotation',
-    label: '旋转'
-  },
-  {
-    value: 'skewX',
-    label: '倾斜X'
-  },
-  {
-    value: 'skewY',
-    label: '倾斜Y'
-  },
-  {
-    value: 'opacity',
-    label: '透明度'
-  },
-  {
-    value: 'rotation',
-    label: '旋转'
-  },
-  {
-    value: 'repeat',
-    label: '重复'
-  },
-  {
-    value: 'delay',
-    label: '延迟'
-  },
-  {
-    value: 'yoyo',
-    label: '方向'
-  },
-  {
-    value: 'ease',
-    label: '曲线'
-  }
-])
-
+// 清空图片
 const handleExceed = () => {
   upload.value!.clearFiles()
 }
-
-const remove = () => {
+// 删除图片
+const removeImg = () => {
   formData.value.formData.imgUrl = ''
   handleExceed()
 }
-
 // 添加动画
-const addAmimation = () => {}
-
 const change = (file) => {
   let url = URL.createObjectURL(file.raw!)
   formData.value.formData.imgUrl = url
+}
+// 添加动画
+const addAmimation = () => {
+  formData.value.amimation.push({
+    keys: [],
+    duration: 1
+  })
 }
 
 const input = (value) => {
@@ -335,9 +304,20 @@ const onclose = () => {
   emit('update:visibel', false)
 }
 
-const saveData = () => {
-  emit('update:data', formData.value)
-  onclose()
+let amimationLoading = ref(false)
+let amimationData = ref(amimationOptions)
+const remoteMethod = (query) => {
+  if (query) {
+    amimationLoading.value = true
+    setTimeout(() => {
+      amimationLoading.value = false
+      amimationData.value = amimationData.value.filter((item) => {
+        return item.label.indexOf(query) > -1
+      })
+    }, 200)
+  } else {
+    amimationData.value = amimationOptions
+  }
 }
 </script>
 <style scoped lang="scss">
@@ -375,7 +355,7 @@ const saveData = () => {
 }
 
 .timeline-item-main {
-  width: 200px;
+  width: 228px;
 }
 </style>
 <style>

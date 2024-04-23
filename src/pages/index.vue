@@ -112,9 +112,9 @@ const add = ($event) => {
     },
     amimation: [
       {
-        x: 300,
-        rotation: 360,
-        duration: 3
+        keys: [],
+        duration: 1,
+        ease: 'none'
         // scaleX: 1,
         // scaleY: 1,
         // rotation: 90,
@@ -184,7 +184,10 @@ const run = () => {
     listData.value.forEach((item) => {
       console.log(item.className, item.amimation)
       gsap.to(`.${item.className}`, {
-        ...item.amimation,
+        x: 200,
+        rotation: 360,
+        duration: 3,
+        ease: 'power1.out',
         scrollTrigger: {
           trigger: `.${item.className}`,
           start: 'top center',
@@ -192,6 +195,16 @@ const run = () => {
           scrub: true
         }
       })
+
+      // gsap.to(`.${item.className}`, {
+      //   ...item.amimation,
+      //   scrollTrigger: {
+      //     trigger: `.${item.className}`,
+      //     start: 'top center',
+      //     end: 'bottom center',
+      //     scrub: true
+      //   }
+      // })
     })
 
     /* gsap.to('.box0', {
