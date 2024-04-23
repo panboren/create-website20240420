@@ -1,42 +1,57 @@
 <template>
-  <div class="content" id="contentRef" @dblclick="add">
-    <el-button @click="show" class="show">预览</el-button>
-    <vue-draggable-resizable
-      class-name="my-class-draggable-resizable"
-      :draggable="isShow"
-      :resizable="isShow"
-      :disableUserSelect="isShow"
-      v-for="(item, index) in listData"
-      :key="item.id + index"
-      :x="item.x"
-      :y="item.y"
-      :w="item.width"
-      :h="item.height"
-      @dragStop="onDragstop"
-      @resizeStop="onResizestop"
-      @activated="onActivated(item)"
-      @deactivated="onDeactivated"
-      :parent="true"
-    >
-      <div class="list-item-main" :class="[item.className]">
-        <div class="list-item">
-          <el-icon class="list-item-edit" @click.stop="onEdit(item)"><Edit /></el-icon>
-          <img
-            v-if="item.formData.type === 'img'"
-            :src="item.formData.imgUrl"
-            class="list-item-img"
-          />
-          <div v-if="item.formData.type === 'text'" class="list-item-img">
-            {{ item.formData.content }}
+  <div class="wrap-main">
+    <div class="header">header</div>
+    <div class="main"></div>
+    <div class="content" id="contentRef" @dblclick="add">
+      <el-button @click="show" class="show">预览</el-button>
+      <vue-draggable-resizable
+        class-name="my-class-draggable-resizable"
+        :draggable="isShow"
+        :resizable="isShow"
+        :disableUserSelect="isShow"
+        v-for="(item, index) in listData"
+        :key="item.id + index"
+        :x="item.formData.x"
+        :y="item.formData.y"
+        :w="item.formData.width"
+        :h="item.formData.height"
+        @dragStop="onDragstop"
+        @resizeStop="onResizestop"
+        @activated="onActivated(item)"
+        @deactivated="onDeactivated"
+        :parent="true"
+      >
+        <div
+          class="list-item-main"
+          :class="[item.className]"
+          :style="{
+            'font-weight': item.formData.fontWeight,
+            'font-size': `${item.formData.fontSize}px`,
+            color: item.formData.fontColor,
+            'box-shadow': `0px 2px ${item.formData.shadowWidth}px ${item.formData.shadowColor}`,
+            background: item.formData.background,
+            'border-radius': `${item.formData.radius}px`
+          }"
+        >
+          <div class="list-item">
+            <el-icon class="list-item-edit" @click.stop="onEdit(item)"><Edit /></el-icon>
+            <img
+              v-if="item.formData.type === 'img'"
+              :src="item.formData.imgUrl"
+              class="list-item-img"
+            />
+            <div v-if="item.formData.type === 'text'" class="list-item-text">
+              {{ item.formData.content }}
+            </div>
+            <form-dialog
+              v-if="item.dialogVisible"
+              v-model:visibel="item.dialogVisible"
+              :data="item"
+            />
           </div>
-          <form-dialog
-            v-if="item.dialogVisible"
-            v-model:visibel="item.dialogVisible"
-            v-model:data="item.formData"
-          />
         </div>
-      </div>
-    </vue-draggable-resizable>
+      </vue-draggable-resizable>
+    </div>
   </div>
 </template>
 
@@ -77,33 +92,42 @@ const add = ($event) => {
   listData.value.push({
     name: 'panboren' + listData.value.length,
     id: listData.value.length,
-    x: $event.offsetX,
-    y: $event.offsetY,
-    width: 200,
-    height: 200,
     dialogVisible: false,
     className: 'box' + listData.value.length,
     formData: {
       type: 'img',
+      x: $event.offsetX,
+      y: $event.offsetY,
+      width: 200,
+      height: 200,
       content: '',
-      imgUrl: ''
+      imgUrl: '',
+      radius: 0,
+      shadowWidth: 0,
+      shadowColor: '#fff',
+      background: '#fff',
+      fontSize: 12,
+      fontColor: '#000',
+      fontWeight: 500
     },
-    amimation: {
-      x: 300,
-      rotation: 360,
-      duration: 3
-      // scaleX: 1,
-      // scaleY: 1,
-      // rotation: 90,
-      // skewX: 0,
-      // skewY: 0,
-      // opacity: 1,
-      // repeat: -1,
-      // delay: 0,
-      // yoyo: true,
-      // duration: 1,
-      // ease: "power1.out",
-    }
+    amimation: [
+      {
+        x: 300,
+        rotation: 360,
+        duration: 3
+        // scaleX: 1,
+        // scaleY: 1,
+        // rotation: 90,
+        // skewX: 0,
+        // skewY: 0,
+        // opacity: 1,
+        // repeat: -1,
+        // delay: 0,
+        // yoyo: true,
+        // duration: 1,
+        // ease: "power1.out",
+      }
+    ]
   })
 }
 
@@ -124,8 +148,8 @@ const onDragstop = (x, y) => {
   if (activeItem.value) {
     listData.value.forEach((item) => {
       if (item.id === activeItem.value.id) {
-        item.x = x
-        item.y = y
+        item.formData.x = x
+        item.formData.y = y
       }
     })
   }
@@ -134,10 +158,10 @@ const onResizestop = (x, y, width, height) => {
   if (activeItem.value) {
     listData.value.forEach((item) => {
       if (item.id === activeItem.value.id) {
-        item.x = x
-        item.y = y
-        item.width = width
-        item.height = height
+        item.formData.x = x
+        item.formData.y = y
+        item.formData.width = width
+        item.formData.height = height
       }
     })
   }
@@ -200,6 +224,16 @@ const run = () => {
 @import 'vue-draggable-resizable/style.css';
 </style>
 <style scoped>
+.wrap-main {
+  width: 100%;
+  height: 100%;
+  .header {
+    width: 100%;
+    height: 60px;
+    background: rgba(127, 255, 212, 0.35);
+  }
+}
+
 .content {
   position: relative;
   width: 100%;
@@ -214,25 +248,42 @@ const run = () => {
   width: 100%;
   height: 100%;
   display: block;
+  overflow: hidden;
   .list-item {
     position: relative;
     width: 100%;
     height: 100%;
-    display: block;
     .list-item-edit {
       position: absolute;
       right: 5px;
       top: 5px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      padding: 5px;
     }
     .list-item-img {
       width: 100%;
       height: 100%;
       display: block;
     }
+    .list-item-text {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      word-wrap: break-word;
+    }
   }
 }
 .my-class-draggable-resizable {
   position: absolute;
+}
+
+.menu-tool {
+  width: 300px;
+  height: 600px;
+  background: aquamarine;
 }
 </style>
 
