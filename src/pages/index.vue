@@ -1,6 +1,6 @@
 <template>
   <div class="wrap-main">
-    <div class="header">header</div>
+    <HeaderTop />
     <div class="main"></div>
     <div class="content" id="contentRef" @dblclick="add">
       <!--      <el-button @click="showAnimation" class="show">预览</el-button>-->
@@ -71,6 +71,7 @@ import VueDraggableResizable from 'vue-draggable-resizable'
 
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger.js'
+import HeaderTop from '~/components/header-tool/header-top.vue'
 gsap.registerPlugin(ScrollTrigger)
 
 let listData = ref([]) // 数据
@@ -376,11 +377,6 @@ const runAnimation = async (item) => {
 .wrap-main {
   width: 100%;
   height: 100%;
-  .header {
-    width: 100%;
-    height: 60px;
-    background: rgba(127, 255, 212, 0.35);
-  }
 }
 
 .content {
