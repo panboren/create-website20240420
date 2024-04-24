@@ -16,140 +16,144 @@
     title="基本信息编辑"
     width="320"
     @close="onclose"
+    :before-close="kill"
   >
     <div class="form-main">
       <el-form ref="form" :model="formData.formData" label-width="80px" :inline="true">
-        <el-form-item label="选择类型" style="width: 100%">
-          <el-select v-model="formData.formData.type" placeholder="请选择类型" style="width: 200px">
-            <el-option
-              v-for="item in typeOption"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="x" label-width="60px" style="margin-right: 10px">
-          <el-input
-            clearable
-            placeholder="请输入"
-            style="width: 73px"
-            v-model="formData.formData.x"
-            :min="1"
-          />
-        </el-form-item>
-        <el-form-item label="y" label-width="60px">
-          <el-input
-            clearable
-            placeholder="请输入"
-            style="width: 73px"
-            v-model="formData.formData.y"
-            :min="1"
-          />
-        </el-form-item>
-        <el-form-item label="宽" label-width="60px" style="margin-right: 10px">
-          <el-input
-            clearable
-            placeholder="请输入"
-            style="width: 73px"
-            v-model="formData.formData.width"
-            :min="1"
-          />
-        </el-form-item>
-        <el-form-item label="高" label-width="60px">
-          <el-input
-            clearable
-            placeholder="请输入"
-            style="width: 73px"
-            v-model="formData.formData.height"
-            :min="1"
-          />
-        </el-form-item>
-        <el-form-item label="圆角" label-width="60px" style="margin-right: 10px">
-          <el-input
-            clearable
-            placeholder="请输入"
-            style="width: 73px"
-            v-model="formData.formData.radius"
-            :min="1"
-          />
-        </el-form-item>
-        <el-form-item label="阴影宽" label-width="60px">
-          <el-input
-            clearable
-            placeholder="请输入"
-            style="width: 72px"
-            v-model="formData.formData.shadowWidth"
-            :min="1"
-          />
-        </el-form-item>
-        <el-form-item label="阴影颜色">
-          <el-color-picker v-model="formData.formData.shadowColor" show-alpha />
-        </el-form-item>
-        <el-form-item label="背景颜色">
-          <el-color-picker v-model="formData.formData.background" show-alpha />
-        </el-form-item>
-        <template v-if="formData.formData.type === 'text'">
-          <el-form-item label="添加文字" style="width: 100%">
-            <el-input
-              v-model="formData.formData.content"
-              clearable
-              placeholder="请输入"
+        <div v-show="isUp">
+          <el-form-item label="选择类型" style="width: 100%">
+            <el-select
+              v-model="formData.formData.type"
+              placeholder="请选择类型"
               style="width: 200px"
-            />
-          </el-form-item>
-          <el-form-item label="尺寸" label-width="60px" style="margin-right: 10px">
-            <el-input
-              clearable
-              placeholder="请输入"
-              style="width: 72px"
-              v-model="formData.formData.fontSize"
-              :min="1"
-            />
-          </el-form-item>
-          <el-form-item label="加粗" label-width="60px">
-            <el-input
-              clearable
-              placeholder="请输入"
-              style="width: 72px"
-              v-model="formData.formData.fontWeight"
-              :min="1"
-            />
-          </el-form-item>
-          <el-form-item label="颜色" label-width="60px" style="margin-right: 10px">
-            <el-color-picker v-model="formData.formData.fontColor" />
-          </el-form-item>
-        </template>
-        <template v-if="formData.formData.type === 'img'">
-          <el-form-item label="添加图片" style="width: 100%">
-            <div class="form-img-main" v-show="formData.formData.imgUrl">
-              <img :src="formData.formData.imgUrl" class="form-img" />
-              <el-icon @click.stop="removeImg" class="form-img-close">
-                <Close />
-              </el-icon>
-            </div>
-            <el-upload
-              v-show="!formData.formData.imgUrl"
-              ref="upload"
-              class="avatar-uploader"
-              :show-file-list="false"
-              :on-change="change"
-              :auto-upload="false"
-              :limit="1"
             >
-              <div class="form-img-main">
-                <el-icon class="avatar-uploader-icon">
-                  <Plus />
+              <el-option
+                v-for="item in typeOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="x" label-width="60px" style="margin-right: 10px">
+            <el-input
+              clearable
+              placeholder="请输入"
+              style="width: 73px"
+              v-model="formData.formData.x"
+              :min="1"
+            />
+          </el-form-item>
+          <el-form-item label="y" label-width="60px">
+            <el-input
+              clearable
+              placeholder="请输入"
+              style="width: 73px"
+              v-model="formData.formData.y"
+              :min="1"
+            />
+          </el-form-item>
+          <el-form-item label="宽" label-width="60px" style="margin-right: 10px">
+            <el-input
+              clearable
+              placeholder="请输入"
+              style="width: 73px"
+              v-model="formData.formData.width"
+              :min="1"
+            />
+          </el-form-item>
+          <el-form-item label="高" label-width="60px">
+            <el-input
+              clearable
+              placeholder="请输入"
+              style="width: 73px"
+              v-model="formData.formData.height"
+              :min="1"
+            />
+          </el-form-item>
+          <el-form-item label="圆角" label-width="60px" style="margin-right: 10px">
+            <el-input
+              clearable
+              placeholder="请输入"
+              style="width: 73px"
+              v-model="formData.formData.borderRadius"
+              :min="1"
+            />
+          </el-form-item>
+          <el-form-item label="背景颜色">
+            <el-color-picker v-model="formData.formData.background" show-alpha />
+          </el-form-item>
+          <template v-if="formData.formData.type === 'text'">
+            <el-form-item label="添加文字" style="width: 100%">
+              <el-input
+                v-model="formData.formData.content"
+                clearable
+                placeholder="请输入"
+                style="width: 200px"
+              />
+            </el-form-item>
+            <el-form-item label="尺寸" label-width="60px" style="margin-right: 10px">
+              <el-input
+                clearable
+                placeholder="请输入"
+                style="width: 72px"
+                v-model="formData.formData.fontSize"
+                :min="1"
+              />
+            </el-form-item>
+            <el-form-item label="加粗" label-width="60px">
+              <el-input
+                clearable
+                placeholder="请输入"
+                style="width: 72px"
+                v-model="formData.formData.fontWeight"
+                :min="1"
+              />
+            </el-form-item>
+            <el-form-item label="颜色" label-width="60px" style="margin-right: 10px">
+              <el-color-picker v-model="formData.formData.color" />
+            </el-form-item>
+          </template>
+          <template v-if="formData.formData.type === 'img'">
+            <el-form-item label="添加图片" style="width: 100%">
+              <div class="form-img-main" v-show="formData.formData.imgUrl">
+                <img :src="formData.formData.imgUrl" class="form-img" />
+                <el-icon @click.stop="removeImg" class="form-img-close">
+                  <Close />
                 </el-icon>
               </div>
-            </el-upload>
-          </el-form-item>
-        </template>
+              <el-upload
+                v-show="!formData.formData.imgUrl"
+                ref="upload"
+                class="avatar-uploader"
+                :show-file-list="false"
+                :on-change="change"
+                :auto-upload="false"
+                :limit="1"
+              >
+                <div class="form-img-main">
+                  <el-icon class="avatar-uploader-icon">
+                    <Plus />
+                  </el-icon>
+                </div>
+              </el-upload>
+            </el-form-item>
+          </template>
+        </div>
         <el-form-item label="添加动画" style="width: 100%">
           <el-button type="primary" :icon="Plus" @click="addAmimation" />
           <el-button type="primary" @click="preview">动画预览</el-button>
+          <el-button
+            type="text"
+            @click="isUp = !isUp"
+            :icon="DArrowLeft"
+            :style="{ transform: isUp ? 'rotate(90deg)' : 'rotate(-90deg)' }"
+          ></el-button>
+
+          <div class="up"></div>
         </el-form-item>
-        <el-scrollbar height="230px">
+
+        <el-scrollbar :height="isUp ? '250px' : '580px'">
           <el-timeline style="padding-left: 20px">
             <el-timeline-item
               v-for="(item, index) in formData.amimation"
@@ -166,7 +170,7 @@
                   <el-input
                     clearable
                     placeholder="请输入"
-                    v-model="formData.formData.duration"
+                    v-model="item.duration"
                     :min="1"
                     style="width: 120px"
                   />
@@ -259,7 +263,7 @@
 </template>
 <script setup lang="ts">
 import { typeOption, amimationOptions, easeOptions } from '~/components/form-dialog/config'
-import { Plus, Close } from '@element-plus/icons-vue'
+import { Plus, Close, DArrowLeft } from '@element-plus/icons-vue'
 const props = defineProps({
   visibel: {
     type: Boolean,
@@ -273,8 +277,8 @@ const props = defineProps({
   }
 })
 
-let emit = defineEmits(['update:visibel', 'update:data', 'showAnimation'])
-
+let emit = defineEmits(['update:visibel', 'update:data', 'showAnimation', 'close', 'clear'])
+let isUp = ref(true)
 const upload = ref(null)
 let formData = ref(props.data)
 // 清空图片
@@ -308,10 +312,9 @@ const change = (file) => {
   let url = URL.createObjectURL(file.raw!)
   formData.value.formData.imgUrl = url
 }
-
 // 动画预览
 const preview = () => {
-  emit('showAnimation', formData.value.amimation)
+  emit('showAnimation', formData.value)
 }
 
 // 添加动画
@@ -328,7 +331,9 @@ const input = (value) => {
 }
 // 关闭弹窗
 const onclose = () => {
+  emit('clear', formData.value)
   emit('update:visibel', false)
+  emit('close', false)
 }
 
 let amimationLoading = ref(false)

@@ -31,17 +31,8 @@ export let amimationOptions = ref([
     label: '高'
   },
   {
-    value: 'radius',
+    value: 'borderRadius',
     label: '圆角'
-  },
-  {
-    value: 'shadowWidth',
-    label: '阴影'
-  },
-  {
-    value: 'shadowColor',
-    label: '阴影颜色',
-    type: 'color'
   },
   {
     value: 'background',
@@ -76,10 +67,6 @@ export let amimationOptions = ref([
   {
     value: 'scaleY',
     label: '缩放Y'
-  },
-  {
-    value: 'rotation',
-    label: '旋转'
   },
   {
     value: 'skewX',

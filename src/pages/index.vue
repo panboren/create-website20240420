@@ -3,7 +3,7 @@
     <div class="header">header</div>
     <div class="main"></div>
     <div class="content" id="contentRef" @dblclick="add">
-      <el-button @click="showAnimation" class="show">预览</el-button>
+      <!--      <el-button @click="showAnimation" class="show">预览</el-button>-->
       <vue-draggable-resizable
         class-name="my-class-draggable-resizable"
         :draggable="isShow"
@@ -27,14 +27,22 @@
           :style="{
             'font-weight': item.formData.fontWeight,
             'font-size': `${item.formData.fontSize}px`,
-            color: item.formData.fontColor,
-            'box-shadow': `0px 2px ${item.formData.shadowWidth}px ${item.formData.shadowColor}`,
+            color: item.formData.color,
             background: item.formData.background,
-            'border-radius': `${item.formData.radius}px`
+            'border-radius': `${item.formData.borderRadius}px`
           }"
         >
-          <div class="list-item">
-            <el-icon class="list-item-edit" @click.stop="onEdit(item)"><Edit /></el-icon>
+          <div
+            class="list-item"
+            @mouseenter="item.showTool = true"
+            @mouseleave="item.showTool = false"
+          >
+            <div class="list-item-tool" v-if="item.showTool">
+              <el-icon class="list-item-edit" @click.stop="onEdit(item)"><Edit /></el-icon>
+              <el-icon class="list-item-edit list-item-delete" @click.stop="onRemove(item)"
+                ><Delete
+              /></el-icon>
+            </div>
             <img
               v-if="item.formData.type === 'img'"
               :src="item.formData.imgUrl"
@@ -47,6 +55,7 @@
               v-if="item.dialogVisible"
               v-model:visibel="item.dialogVisible"
               :data="item"
+              @clear="onClear"
               @showAnimation="showAnimation"
             />
           </div>
@@ -57,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Edit } from '@element-plus/icons-vue'
+import { Edit, Delete } from '@element-plus/icons-vue'
 import VueDraggableResizable from 'vue-draggable-resizable'
 
 import gsap from 'gsap'
@@ -70,22 +79,23 @@ let editItem = ref({}) // 编辑数据
 
 let isShow = ref(true)
 
-const showAnimation = () => {
-  console.log(listData)
-  isShow.value = !isShow.value
-  run()
-}
-
 // 编辑
 const onEdit = (item) => {
   editItem.value = item
   editItem.value.dialogVisible = true
   console.log('edit')
 }
-// // 关闭弹窗
-// const onclose = ()=>{
-//   editItem.value = {}
-// }
+// 删除
+const onRemove = (item) => {
+  console.log('remove')
+  listData.value.splice(listData.value.indexOf(item), 1)
+}
+
+// 关闭弹窗
+const onClear = (item) => {
+  kill(item)
+  isShow.value = true
+}
 
 // 创建
 const add = ($event) => {
@@ -108,7 +118,7 @@ const add = ($event) => {
       shadowColor: '#fff',
       background: '#fff',
       fontSize: 12,
-      fontColor: '#000',
+      color: '#000',
       fontWeight: 500
     },
     amimation: [
@@ -169,24 +179,130 @@ const onResizestop = (x, y, width, height) => {
   console.log('resizestop', x, y, width, height)
 }
 
-const run = () => {
-  if (listData.value && listData.value.length > 0) {
-    listData.value.forEach((item) => {
-      console.log(item.className, item.amimation)
-      item.amimation.forEach((child) => {
-        gsap.to(`.${item.className}`, {
-          ...child,
-          scrollTrigger: {
-            trigger: `.${item.className}`,
-            start: 'top center',
-            end: 'bottom center',
-            scrub: true
-          }
-        })
-      })
-    })
+// 清除动画
+// const clearAnimation = () => {
+//   isShow.value = !isShow.value
+// }
+
+const showAnimation = (item) => {
+  console.log(listData)
+  isShow.value = !isShow.value
+  runAnimation(item)
+}
+
+const kill = (item) => {
+  if (item.timeline) {
+    // 清除自己
+    item.timeline.revert()
+    item.timeline.clear()
+    item.timeline.kill()
+    item.timeline = null
   }
 }
+
+const runAnimation = async (item) => {
+  kill(item)
+  isShow.value = false
+  await nextTick()
+  let timeline = gsap.timeline({
+    paused: true,
+    scrollTrigger: {
+      trigger: '.content',
+      markers: true,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: true, // 1
+      pin: true,
+      snap: {
+        snapTo: 'labels',
+        duration: { min: 0.2, max: 3 },
+        delay: 0.2,
+        ease: 'power1.inOut'
+      }
+    }
+  })
+  item.timeline = timeline
+  item.amimation.forEach((child) => {
+    timeline.to(`.${item.className}`, {
+      ...child,
+      onComplete: () => {
+        console.log('onComplete', item)
+      }
+    })
+  })
+}
+
+// const runAnimation = () => {
+//   if (listData.value && listData.value.length > 0) {
+//     listData.value.forEach((item) => {
+//       console.log(item.className, item.amimation)
+//       if (item.timeline) {
+//         // 清除自己
+//         item.timeline.kill()
+//       }
+//       let timeline = gsap.timeline({
+//         paused: true,
+//         scrollTrigger: {
+//           trigger: '.content',
+//           pin: true,
+//           markers: true,
+//           start: 'top top',
+//           end: 'bottom bottom',
+//           scrub: true, // 1
+//           snap: {
+//             snapTo: 'labels',
+//             duration: { min: 0.2, max: 3 },
+//             delay: 0.2,
+//             ease: 'power1.inOut'
+//           }
+//         }
+//       })
+//       item.timeline = timeline
+//       item.amimation.forEach((child) => {
+//         timeline.to(`.${item.className}`, {
+//           ...child,
+//           onComplete: () => {
+//             console.log('onComplete')
+//           }
+//         })
+//       })
+//     })
+//   }
+// }
+
+/* const runAnimation = () => {
+  gsap.to('.box0', {
+    duration: 1, // 动画持续时间（秒）
+    x: 1000, // 沿X轴移动100像素（正数向右，负数向左）
+    ease: 'power1.in', // 可选，指定缓动函数
+    scrollTrigger: {
+      trigger: '.box0',
+      start: 'top center',
+      end: 'bottom center',
+      scrub: true,
+      pin: true
+    }
+  })
+}*/
+
+// const runAnimation = () => {
+//   if (listData.value && listData.value.length > 0) {
+//     listData.value.forEach((item) => {
+//       console.log(item.className, item.amimation)
+//       item.amimation.forEach((child) => {
+//         gsap.to(`.${item.className}`, {
+//           ...child,
+//           scrollTrigger: {
+//             trigger: `.${item.className}`,
+//             start: 'top center',
+//             end: 'bottom center',
+//             scrub: true
+//           }
+//         })
+//       })
+//     })
+//   }
+// }
 
 /* const run = () => {
   // ScrollTrigger.create({
@@ -271,6 +387,7 @@ const run = () => {
   position: relative;
   width: 100%;
   height: 3000px;
+  overflow: hidden;
 }
 .show {
   position: absolute;
@@ -286,13 +403,28 @@ const run = () => {
     position: relative;
     width: 100%;
     height: 100%;
-    .list-item-edit {
+    .list-item-tool {
       position: absolute;
       right: 5px;
       top: 5px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      border: 1px solid #626262;
+      border-radius: 5px;
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    .list-item-edit {
+      border-radius: 4px;
       padding: 5px;
+      color: #fff;
+      margin: 0px 4px;
+      cursor: pointer;
+      &:hover {
+        background: #3f80b9;
+      }
     }
     .list-item-img {
       width: 100%;
