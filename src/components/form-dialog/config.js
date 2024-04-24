@@ -108,10 +108,6 @@ export let amimationOptions = ref([
   {
     value: 'yoyo',
     label: '方向'
-  },
-  {
-    value: 'ease',
-    label: '曲线'
   }
 ])
 

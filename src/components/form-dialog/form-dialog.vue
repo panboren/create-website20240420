@@ -176,14 +176,10 @@
                   style="margin-right: 0; margin-bottom: 5px; width: 100%"
                 >
                   <el-select
-                    v-model="item.keys"
+                    v-model="item.ease"
                     placeholder="请选择动画类型"
                     style="width: 160px"
                     :teleported="false"
-                    multiple
-                    clearable
-                    collapse-tags
-                    :max-collapse-tags="1"
                   >
                     <el-option
                       v-for="anItem in easeOptions"
@@ -199,7 +195,7 @@
                   style="margin-right: 0; margin-bottom: 5px; width: 100%"
                 >
                   <el-select
-                    v-model="item.ease"
+                    v-model="item.keys"
                     placeholder="请选择动画属性"
                     style="width: 160px"
                     :teleported="false"
@@ -207,6 +203,7 @@
                     clearable
                     collapse-tags
                     :max-collapse-tags="1"
+                    @change="changeKey(item.keys, item)"
                   >
                     <el-option
                       v-for="anItem in amimationData"
@@ -216,30 +213,35 @@
                     />
                   </el-select>
                 </el-form-item>
-                <el-form-item
-                  v-for="anItem in amimationData"
-                  :label="anItem.label"
-                  :key="anItem.value"
-                  label-width="80px"
-                  style="margin-right: 0; margin-bottom: 5px"
-                >
-                  <el-color-picker
-                    v-if="anItem.type === 'color'"
-                    v-model="item[anItem.value]"
-                    show-alpha
-                  />
-                  <el-input
-                    v-else
-                    clearable
-                    placeholder="请输入"
-                    v-model="item[anItem.value]"
-                    :min="1"
-                    style="width: 120px"
-                  />
-                  <el-icon @click.stop="removeImg" class="timeline-item-main-key-close">
-                    <Close />
-                  </el-icon>
-                </el-form-item>
+                <template v-for="anItem in amimationData" :key="anItem.value">
+                  <el-form-item
+                    v-if="item.keys.includes(anItem.value)"
+                    :key="anItem.value"
+                    :label="anItem.label"
+                    label-width="80px"
+                    style="margin-right: 0; margin-bottom: 5px"
+                  >
+                    <el-color-picker
+                      v-if="anItem.type === 'color'"
+                      v-model="item[anItem.value]"
+                      show-alpha
+                    />
+                    <el-input
+                      v-else
+                      clearable
+                      placeholder="请输入"
+                      v-model="item[anItem.value]"
+                      :min="1"
+                      style="width: 120px"
+                    />
+                    <el-icon
+                      @click.stop="removeKey(item.keys, anItem.value, item)"
+                      class="timeline-item-main-key-close"
+                    >
+                      <Close />
+                    </el-icon>
+                  </el-form-item>
+                </template>
               </div>
             </el-timeline-item>
           </el-timeline>
@@ -278,6 +280,23 @@ let formData = ref(props.data)
 const handleExceed = () => {
   upload.value!.clearFiles()
 }
+
+// change key
+const changeKey = (keys, data) => {
+  let keyList = ['keys', 'duration', 'ease', ...keys]
+  for (let key in data) {
+    if (!keyList.includes(key)) {
+      delete data[key]
+    }
+  }
+}
+
+// 删除key
+const removeKey = (keys, key, data) => {
+  keys.splice(keys.indexOf(key), 1)
+  delete data[key]
+}
+
 // 删除图片
 const removeImg = () => {
   formData.value.formData.imgUrl = ''
@@ -292,7 +311,8 @@ const change = (file) => {
 const addAmimation = () => {
   formData.value.amimation.push({
     keys: [],
-    duration: 1
+    duration: 1,
+    ease: 'none'
   })
 }
 
