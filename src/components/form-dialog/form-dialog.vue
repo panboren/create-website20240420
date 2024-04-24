@@ -147,6 +147,7 @@
         </template>
         <el-form-item label="添加动画" style="width: 100%">
           <el-button type="primary" :icon="Plus" @click="addAmimation" />
+          <el-button type="primary" @click="preview">动画预览</el-button>
         </el-form-item>
         <el-scrollbar height="230px">
           <el-timeline style="padding-left: 20px">
@@ -165,7 +166,7 @@
                   <el-input
                     clearable
                     placeholder="请输入"
-                    v-model="formData.formData.width"
+                    v-model="formData.formData.duration"
                     :min="1"
                     style="width: 120px"
                   />
@@ -272,7 +273,7 @@ const props = defineProps({
   }
 })
 
-let emit = defineEmits(['update:visibel', 'update:data'])
+let emit = defineEmits(['update:visibel', 'update:data', 'showAnimation'])
 
 const upload = ref(null)
 let formData = ref(props.data)
@@ -307,6 +308,12 @@ const change = (file) => {
   let url = URL.createObjectURL(file.raw!)
   formData.value.formData.imgUrl = url
 }
+
+// 动画预览
+const preview = () => {
+  emit('showAnimation', formData.value.amimation)
+}
+
 // 添加动画
 const addAmimation = () => {
   formData.value.amimation.push({

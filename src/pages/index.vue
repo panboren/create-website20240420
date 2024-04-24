@@ -3,7 +3,7 @@
     <div class="header">header</div>
     <div class="main"></div>
     <div class="content" id="contentRef" @dblclick="add">
-      <el-button @click="show" class="show">预览</el-button>
+      <el-button @click="showAnimation" class="show">预览</el-button>
       <vue-draggable-resizable
         class-name="my-class-draggable-resizable"
         :draggable="isShow"
@@ -47,6 +47,7 @@
               v-if="item.dialogVisible"
               v-model:visibel="item.dialogVisible"
               :data="item"
+              @showAnimation="showAnimation"
             />
           </div>
         </div>
@@ -69,7 +70,7 @@ let editItem = ref({}) // 编辑数据
 
 let isShow = ref(true)
 
-const show = () => {
+const showAnimation = () => {
   console.log(listData)
   isShow.value = !isShow.value
   run()
@@ -169,6 +170,25 @@ const onResizestop = (x, y, width, height) => {
 }
 
 const run = () => {
+  if (listData.value && listData.value.length > 0) {
+    listData.value.forEach((item) => {
+      console.log(item.className, item.amimation)
+      item.amimation.forEach((child) => {
+        gsap.to(`.${item.className}`, {
+          ...child,
+          scrollTrigger: {
+            trigger: `.${item.className}`,
+            start: 'top center',
+            end: 'bottom center',
+            scrub: true
+          }
+        })
+      })
+    })
+  }
+}
+
+/* const run = () => {
   // ScrollTrigger.create({
   //   trigger: '#contentRef',
   //   start: 'top top',
@@ -207,7 +227,7 @@ const run = () => {
       // })
     })
 
-    /* gsap.to('.box0', {
+    /!* gsap.to('.box0', {
       rotation: 360,
       duration: 3,
       onUpdate: (self) => console.log('direction:', self),
@@ -229,9 +249,9 @@ const run = () => {
         end: 'bottom center',
         scrub: true
       }
-    })*/
+    })*!/
   }
-}
+}*/
 </script>
 <style>
 @import 'vue-draggable-resizable/style.css';

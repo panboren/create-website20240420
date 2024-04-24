@@ -114,48 +114,146 @@ export let amimationOptions = ref([
 // import { CustomWiggle } from 'gsap/CustomWiggle'
 export let easeOptions = ref([
   {
+    value: 'back.in(1.7)',
+    label: 'back.in'
+  },
+  {
+    value: 'back.out(1.7)',
+    label: 'back.out'
+  },
+  {
     value: 'back.inOut(1.7)',
-    label: 'back'
+    label: 'back.inOut'
+  },
+
+  {
+    value: 'bounce.in',
+    label: 'bounce.in'
+  },
+
+  {
+    value: 'bounce.out',
+    label: 'bounce.out'
   },
   {
     value: 'bounce.inOut',
-    label: 'bounce'
+    label: 'bounce.inOut'
+  },
+
+  {
+    value: 'circ.in',
+    label: 'circ.in'
+  },
+  {
+    value: 'circ.out',
+    label: 'circ.out'
   },
   {
     value: 'circ.inOut',
-    label: 'circ'
+    label: 'circ.inOut'
+  },
+
+  {
+    value: 'elastic.in(1,0.3)',
+    label: 'elastic.in'
+  },
+  {
+    value: 'elastic.out(1,0.3)',
+    label: 'elastic.out'
   },
   {
     value: 'elastic.inOut(1,0.3)',
-    label: 'elastic'
+    label: 'elastic.inOut'
+  },
+  {
+    value: 'expo.in',
+    label: 'expo.in'
+  },
+  {
+    value: 'expo.out',
+    label: 'expo.out'
   },
   {
     value: 'expo.inOut',
-    label: 'expo'
+    label: 'expo.inOut'
   },
   {
     value: 'none',
     label: 'none'
   },
+
+  {
+    value: 'power1.in',
+    label: 'power1.in'
+  },
+  {
+    value: 'power1.out',
+    label: 'power1.out'
+  },
   {
     value: 'power1.inOut',
-    label: 'quad/power1'
+    label: 'power1.inOut'
+  },
+  {
+    value: 'power2.in',
+    label: 'power2.in'
+  },
+  {
+    value: 'power2.out',
+    label: 'power2.out'
   },
   {
     value: 'power2.inOut',
-    label: 'Cubic/power2'
+    label: 'power2.inOut'
+  },
+  {
+    value: 'power3.in',
+    label: 'power3.in'
+  },
+  {
+    value: 'power3.out',
+    label: 'power3.out'
   },
   {
     value: 'power3.inOut',
-    label: 'quart/power3'
+    label: 'power3.inOut'
+  },
+  {
+    value: 'power4.in',
+    label: 'power4.in'
+  },
+  {
+    value: 'power4.out',
+    label: 'power4.out'
   },
   {
     value: 'power4.inOut',
-    label: 'strong/Quint/power4'
+    label: 'power4.inOut'
+  },
+  {
+    value: 'sine.in',
+    label: 'sine.in'
+  },
+  {
+    value: 'sine.out',
+    label: 'sine.out'
   },
   {
     value: 'sine.inOut',
-    label: 'sine'
+    label: 'sine.inOut'
+  },
+
+  {
+    value:
+      'rough({\n' +
+      '    template:none.in,\n' +
+      '    strength: 1,\n' +
+      '    points:20,\n' +
+      '    taper:both,\n' +
+      '    randomize:true,\n' +
+      '    clamp:false\n' +
+      '  })',
+    label: 'rough.in'
   },
   {
     value:
@@ -163,12 +261,26 @@ export let easeOptions = ref([
       'template:none.out,\n' +
       'strength: 1,\n' +
       'points:20,\n' +
-      'taper:none,\n' +
+      'taper:both,\n' +
       'randomize:true,\n' +
       'clamp:false\n' +
       '})',
-    label: 'rough'
+    label: 'rough.out'
   },
+
+  {
+    value:
+      'rough({\n' +
+      'template:none.inOut,\n' +
+      'strength: 1,\n' +
+      'points:20,\n' +
+      'taper:both,\n' +
+      'randomize:true,\n' +
+      'clamp:false\n' +
+      '})',
+    label: 'rough.inOut'
+  },
+
   {
     value: 'slow(0.7,0.7,false)',
     label: 'slow'
