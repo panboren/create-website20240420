@@ -10,14 +10,19 @@
       :class="{ active: tabId === 2 }"
       @click="select(2)"
     ></div>
-    <div class="header-look">预览</div>
+    <div class="header-look" @click="preview">预览</div>
   </div>
 </template>
 <script setup lang="ts">
+const router = useRouter()
 let tabId = ref(1)
 
 const select = (id) => {
   tabId.value = id
+}
+const preview = () => {
+  console.log('preview')
+  router.push('/preview')
 }
 </script>
 

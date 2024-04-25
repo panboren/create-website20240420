@@ -1,16 +1,9 @@
 <template>
-  <div class="wrap-main">index</div>
-</template>
-<script lang="ts" setup></script>
-<style></style>
-
-<!--
-<template>
   <div class="wrap-main">
     <HeaderTop />
     <div class="main"></div>
     <div class="content" id="contentRef" @dblclick="add">
-      &lt;!&ndash;      <el-button @click="showAnimation" class="show">预览</el-button>&ndash;&gt;
+      <!--      <el-button @click="showAnimation" class="show">预览</el-button>-->
       <vue-draggable-resizable
         class-name="my-class-draggable-resizable"
         :draggable="isShow"
@@ -202,45 +195,69 @@ const showAnimation = (item) => {
 
 const kill = (item) => {
   if (item.timeline) {
-    // 清除自己
-    item.timeline.revert()
-    item.timeline.clear()
-    item.timeline.kill()
-    item.timeline = null
+    let timer = setTimeout(() => {
+      clearTimeout(timer)
+      // 清除自己
+      item.timeline?.revert()
+      item.timeline?.clear()
+      item.timeline?.kill()
+      item.timeline = null
+    }, 100)
   }
 }
 
 const runAnimation = async (item) => {
   kill(item)
   isShow.value = false
-  await nextTick()
-  let timeline = gsap.timeline({
-    paused: true,
-    scrollTrigger: {
-      trigger: '.content',
-      markers: true,
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: true, // 1
-      pin: true,
-      snap: {
-        snapTo: 'labels',
-        duration: { min: 0.2, max: 3 },
-        delay: 0.2,
-        ease: 'power1.inOut'
-      }
-    }
-  })
-  item.timeline = timeline
-  item.amimation.forEach((child) => {
-    timeline.to(`.${item.className}`, {
-      ...child,
-      onComplete: () => {
-        console.log('onComplete', item)
+  let timer = setTimeout(() => {
+    clearTimeout(timer)
+    let timeline = gsap.timeline({
+      paused: true,
+      scrollTrigger: {
+        trigger: '.content',
+        markers: true,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: true, // 1
+        pin: true,
+        snap: {
+          snapTo: 'labels',
+          duration: { min: 0.2, max: 3 },
+          delay: 0.2,
+          ease: 'power1.inOut'
+        }
       }
     })
-  })
+    item.timeline = timeline
+    item.amimation.forEach((child) => {
+      timeline.to(`.${item.className}`, {
+        ...child,
+        onComplete: () => {
+          console.log('onComplete', item)
+        }
+      })
+    })
+  }, 500)
 }
+let time = null
+const save = () => {
+  time = setTimeout(() => {
+    clearTimeout(time)
+    let data = listData.value || []
+    console.log(589, data)
+    let jsonData = JSON.stringify(data)
+    localStorage.setItem('ANIMASTION_DATA', jsonData)
+    save()
+    console.log(147, time, jsonData)
+  }, 2000)
+}
+
+onMounted(() => {
+  save()
+})
+onBeforeUnmount(() => {
+  clearTimeout(time)
+})
 
 // const runAnimation = () => {
 //   if (listData.value && listData.value.length > 0) {
@@ -456,7 +473,6 @@ const runAnimation = async (item) => {
   background: aquamarine;
 }
 </style>
--->
 
 <!--<template>
   <div class="content" id="contentRef" @dblclick="add">
