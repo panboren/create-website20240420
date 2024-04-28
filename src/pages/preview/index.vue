@@ -46,8 +46,8 @@ const runAnimation = () => {
         paused: true,
         scrollTrigger: {
           trigger: `.${item.className}`,
-          start: 'top center',
-          end: 'bottom center',
+          start: index === 0 ? 'top 10px' : 'top 60%',
+          end: 'bottom bottom',
           scrub: true, // 1
           pin: true,
           snap: {
