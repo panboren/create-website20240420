@@ -16,12 +16,13 @@
 <script setup lang="ts">
 const router = useRouter()
 let tabId = ref(1)
-
+const emit = defineEmits(['save'])
 const select = (id) => {
   tabId.value = id
 }
 const preview = () => {
   console.log('preview')
+  emit('save', 0)
   router.push('/preview')
 }
 </script>

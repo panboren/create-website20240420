@@ -33,11 +33,9 @@ const tableData = [
   }
 ]
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 body {
   background-color: $bgColor;
   color: $theme;
 }
 </style>
-
-

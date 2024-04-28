@@ -39,37 +39,32 @@ gsap.registerPlugin(ScrollTrigger)
 let listData = ref([])
 let timeline = ref(null)
 const runAnimation = () => {
-  let timer = setTimeout(async () => {
+  let timer = setTimeout(() => {
     clearTimeout(timer)
-    timeline.value ? timeline.value?.kill() : null
-    await nextTick()
-    let timeList = gsap.timeline({
-      paused: true,
-      scrollTrigger: {
-        trigger: '.preview',
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: true, // 1
-        pin: true,
-        snap: {
-          snapTo: 'labels',
-          duration: { min: 0.2, max: 3 },
-          delay: 0.2,
-          ease: 'power1.inOut'
+    listData.value.forEach(async (item, index) => {
+      let timeList = gsap.timeline({
+        paused: true,
+        scrollTrigger: {
+          trigger: `.${item.className}`,
+          start: 'top center',
+          end: 'bottom center',
+          scrub: true, // 1
+          pin: true,
+          snap: {
+            snapTo: 'labels',
+            duration: { min: 0.2, max: 3 },
+            delay: 0.2,
+            ease: 'power1.inOut'
+          }
         }
-      }
-    })
-    timeline.value = timeList
-    listData.value.forEach((item) => {
+      })
+      item.timeline = timeList
       item.amimation.forEach((child) => {
         let res = child || {}
         delete res.keys
+        console.log(889, res)
         timeList.to(`.${item.className}`, {
-          duration: 1,
-          ease: 'none',
-          width: 524,
-          height: 251,
-          borderRadius: 60,
+          ...res,
           onComplete: () => {
             console.log('onComplete888', item)
           }
@@ -79,6 +74,7 @@ const runAnimation = () => {
   }, 300)
 }
 onMounted(() => {
+  ScrollTrigger.refresh()
   let res = localStorage.getItem('ANIMASTION_DATA')
   console.log(999, res)
   if (res) {

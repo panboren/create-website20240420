@@ -1,6 +1,6 @@
 <template>
   <div class="wrap-main">
-    <HeaderTop />
+    <HeaderTop @save="save" />
     <div class="main"></div>
     <div class="content" id="contentRef" @dblclick="add">
       <!--      <el-button @click="showAnimation" class="show">预览</el-button>-->
@@ -240,7 +240,7 @@ const runAnimation = async (item) => {
   }, 500)
 }
 let time = null
-const save = () => {
+const save = (layze = 2000) => {
   time = setTimeout(() => {
     clearTimeout(time)
     let data = listData.value || []
@@ -249,7 +249,7 @@ const save = () => {
     localStorage.setItem('ANIMASTION_DATA', jsonData)
     save()
     console.log(147, time, jsonData)
-  }, 2000)
+  }, layze)
 }
 
 onMounted(() => {
